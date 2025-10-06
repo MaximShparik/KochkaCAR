@@ -14,12 +14,12 @@ const router = new Router({
   mode: 'history',
   routes: [
     { path: '/', component: UserPage },
-    { path: '/admin/login', component: AdminLogin },
+    { path: '/dkzadmin0966sv/login', component: AdminLogin },
     {
-      path: '/admin',
+      path: '/dkzadmin0966sv',
       component: AdminPage,
       beforeEnter: (to, from, next) => {
-        if (!isAuthed()) return next('/admin/login');
+        if (!isAuthed()) return next('/dkzadmin0966sv/login');
         next();
       }
     },

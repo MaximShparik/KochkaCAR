@@ -8,7 +8,7 @@
         <input v-model.number="form.year" type="number" min="1900" required
       /></label>
       <label>VIN <input v-model="form.vin" required /></label>
-      <label>Invoice # <input v-model="form.invoiceNumber" required /></label>
+      <label>Invoice № <input v-model="form.invoiceNumber" required /></label>
       <label>
         Condition
         <select v-model="form.condition" required>
@@ -19,15 +19,12 @@
       <label>
         Location
         <select v-model="form.location" required>
-          <option value="warehouse">warehouse</option>
-          <option value="Khorgos">Khorgos</option>
-          <option value="Kazakhstan terminal">Kazakhstan terminal</option>
-          <option value="Kazakhstan-Russian Federation customs post">
-            Kazakhstan-Russian Federation customs post
+          <option v-for="opt in locationOptions" :key="opt.value" :value="opt.value">
+            {{ opt.label }}
           </option>
-          <option value="Minsk">Minsk</option>
         </select>
       </label>
+
       <!-- <label>Latitude (optional) <input v-model.number="form.lat" type="number" step="0.000001" /></label>
       <label>Longitude (optional) <input v-model.number="form.lng" type="number" step="0.000001" /></label> -->
     </div>
@@ -39,6 +36,7 @@
 </template>
 
 <script>
+import { LOCATION_OPTIONS } from "../constants/location";
 export default {
   name: "CarForm",
   props: {
@@ -47,7 +45,7 @@ export default {
     submitText: { type: String, default: "Сохранить" },
   },
   data() {
-    return { form: { ...this.value } };
+    return { form: { ...this.value }, locationOptions: LOCATION_OPTIONS };
   },
   watch: {
     value: {
@@ -101,8 +99,14 @@ button[type="button"] {
   background: #374151;
 }
 @media (max-width: 768px) {
-  .grid { grid-template-columns: 1fr; }
-  button { width: 100%; }
-  .actions { flex-direction: column; }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  button {
+    width: 100%;
+  }
+  .actions {
+    flex-direction: column;
+  }
 }
 </style>

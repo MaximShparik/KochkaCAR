@@ -88,7 +88,7 @@
               <td data-label="VIN">{{ c.vin }}</td>
               <td data-label="Invoice">{{ c.invoiceNumber }}</td>
               <td data-label="Condition">{{ c.condition }}</td>
-              <td data-label="Location">{{ c.location }}</td>
+              <td data-label="Location">{{ locLabel(c.location) }}</td>
               <td data-label="Действия">
                 <div class="row-actions">
                   <button @click="edited = c">Редакт.</button>
@@ -107,6 +107,8 @@
 <script>
 import api from "../api";
 import CarForm from "../components/CarForm.vue";
+import { LOCATION_BY_KEY, LOCATION_OPTIONS } from '../constants/location';
+
 export default {
   name: "AdminPage",
   components: { CarForm },
@@ -125,9 +127,10 @@ export default {
     this.fetchCars();
   },
   methods: {
+    locLabel(v){ return LOCATION_BY_KEY[v]?.full || v; },
     logout() {
       localStorage.removeItem("token");
-      this.$router.push("/admin/login");
+      this.$router.push("/dkzadmin0966sv/login");
     },
     async fetchCars() {
       const { data } = await api.get("/cars");

@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import { LOCATIONS } from "../constants/location";
+
 export default {
   name: "YandexMap",
   props: {
@@ -33,32 +35,22 @@ export default {
       map: null,
       ymapsReady: false,
       objects: [],
-      steps: [
-        { key: "warehouse", label: "Warehouse", coord: [43.25667, 76.92861] },
-        { key: "Khorgos", label: "Khorgos", coord: [44.212, 80.414] },
-        {
-          key: "Kazakhstan terminal",
-          label: "KZ terminal (Astana)",
-          coord: [51.16939, 71.44907],
-        },
-        {
-          key: "Kazakhstan-Russian Federation customs post",
-          label: "KZ-RF customs",
-          coord: [54.87578, 69.16299],
-        },
-        { key: "Minsk", label: "Minsk", coord: [53.90228, 27.56188] },
-      ],
+      steps: LOCATIONS.map((l) => ({
+        key: l.key,
+        label: l.short,
+        coord: l.coord,
+      })),
     };
   },
   computed: {
     currentIdx() {
-      const i = this.steps.findIndex((s) => s.key === this.location);
-      return i < 0 ? -1 : i;
+      return this.steps.findIndex((s) => s.key === this.location);
     },
     progressPercent() {
-      if (this.currentIdx < 0) return 0;
+      const i = this.currentIdx;
+      if (i < 0) return 0;
       const max = this.steps.length - 1;
-      return Math.min(100, Math.round((this.currentIdx / max) * 100));
+      return Math.min(100, Math.round((i / max) * 100));
     },
   },
   mounted() {
@@ -208,10 +200,11 @@ export default {
 }
 .steps {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
   margin-top: 10px;
 }
+
 .step {
   display: grid;
   justify-items: center;

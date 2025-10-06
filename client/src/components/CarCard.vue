@@ -3,20 +3,24 @@
     <div class="row"><strong>Make/Model:</strong> {{ item.makeModel }}</div>
     <div class="row"><strong>Year:</strong> {{ item.year }}</div>
     <div class="row"><strong>VIN:</strong> {{ item.vin }}</div>
-    <div class="row"><strong>Invoice #:</strong> {{ item.invoiceNumber }}</div>
+    <div class="row"><strong>Invoice №:</strong> {{ item.invoiceNumber }}</div>
     <div class="row"><strong>Condition:</strong> {{ prettyCondition(item.condition) }}</div>
-    <div class="row"><strong>Location:</strong> {{ item.location }}</div>
+    <div class="row"><strong>Location:</strong> {{ locationLabel }}</div>
   </div>
 </template>
 
 <script>
+import { LOCATION_BY_KEY } from '../constants/location';
 export default {
-  name: 'CarCard',
-  props: { item: { type: Object, required: true } },
+  name:'CarCard',
+  props:{ item:{type:Object,required:true} },
+  computed:{
+    locationLabel(){ return LOCATION_BY_KEY[this.item.location]?.full || this.item.location; },
+  },
   methods: {
     prettyCondition(c) { return c === 'in_transit' ? 'in transit' : 'registration'; }
   }
-};
+}
 </script>
 
 <style scoped>
