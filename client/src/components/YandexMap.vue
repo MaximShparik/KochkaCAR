@@ -86,9 +86,7 @@ export default {
       return new Promise((resolve, reject) => {
         if (window.ymaps) return resolve();
         const key = process.env.VUE_APP_YANDEX_API_KEY;
-        // console.log(key)
-        // ★ грузим полный пакет, чтобы точно был multiRouter
-        const url = `https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=${key}&load=package.full`;
+        const url = `https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=${key}`;
         const s = document.createElement("script");
         s.src = url;
         s.async = true;
@@ -129,21 +127,6 @@ export default {
         );
       } catch (e) {}
     },
-    // ★ резервная линия (если маршрутизация не сработает)
-    drawFallbackLine(coords, color, width, dashed = false) {
-      const line = new window.ymaps.Polyline(
-        coords,
-        {},
-        {
-          strokeColor: color,
-          strokeWidth: width,
-          strokeStyle: dashed ? "dash" : "solid",
-        }
-      );
-      this.map.geoObjects.add(line);
-      this.objects.push(line);
-      return line;
-    },
     drawRoute() {
       if (!this.map || !this.ymapsReady) return;
       const ymaps = window.ymaps;
@@ -151,67 +134,22 @@ export default {
 
       const coords = this.steps.map((s) => s.coord);
 
-      // ★ сразу показать все точки в кадре
+      // Вписать карту по всем точкам
       this.fitToAllPoints(coords);
 
-      // Кастомный пронумерованный пин
+      // Кастомный пронумерованный пин (цвет пина зависит от прогресса)
       const NumberPin = ymaps.templateLayoutFactory.createClass(
         `<div style="
-          width:28px;height:28px;border-radius:14px;
-          display:flex;align-items:center;justify-content:center;
-          font-size:13px;font-weight:700;color:#08110a;
-          background:$[properties.bgColor];
-          border:1px solid rgba(0,0,0,0.35);
-          box-shadow:0 0 0 3px $[properties.ringColor];
-        ">$[properties.num]</div>`
+      width:28px;height:28px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:13px;font-weight:700;color:#08110a;
+      background:$[properties.bgColor];
+      border:1px solid rgba(0,0,0,0.35);
+      box-shadow:0 0 0 3px $[properties.ringColor];
+    ">$[properties.num]</div>`
       );
 
-      // Полный серый маршрут (дороги)
-      let fullRoute;
-      if (ymaps.multiRouter?.MultiRoute) {
-        fullRoute = new ymaps.multiRouter.MultiRoute(
-          { referencePoints: coords, params: { routingMode: "auto" } }, // ★ по дорогам
-          {
-            boundsAutoApply: false,
-            viaPointVisible: false,
-            wayPointVisible: false,
-            routeActiveStrokeColor: "#6b7280",
-            routeActiveStrokeWidth: 6,
-            routeStrokeColor: "#6b7280",
-            routeStrokeWidth: 6,
-          }
-        );
-        this.map.geoObjects.add(fullRoute);
-        this.objects.push(fullRoute);
-      } else {
-        // если по какой-то причине нет роутера — рисуем серую ломаную
-        this.drawFallbackLine(coords, "#6b7280", 4, true);
-      }
-
-      // Зелёная пройденная часть
-      if (this.currentIdx >= 1) {
-        const passedCoords = coords.slice(0, this.currentIdx + 1);
-        if (ymaps.multiRouter?.MultiRoute) {
-          const passedRoute = new ymaps.multiRouter.MultiRoute(
-            { referencePoints: passedCoords, params: { routingMode: "auto" } },
-            {
-              boundsAutoApply: false,
-              viaPointVisible: false,
-              wayPointVisible: false,
-              routeActiveStrokeColor: "#22c55e",
-              routeActiveStrokeWidth: 7,
-              routeStrokeColor: "#22c55e",
-              routeStrokeWidth: 7,
-            }
-          );
-          this.map.geoObjects.add(passedRoute);
-          this.objects.push(passedRoute);
-        } else {
-          this.drawFallbackLine(passedCoords, "#22c55e", 5, false);
-        }
-      }
-
-      // Точки с нумерацией
+      // Только точки: пройденные — зелёные, будущие — серые
       this.steps.forEach((s, idx) => {
         const passed = this.currentIdx >= 0 && idx <= this.currentIdx;
         const pin = new ymaps.Placemark(
@@ -232,28 +170,6 @@ export default {
         this.map.geoObjects.add(pin);
         this.objects.push(pin);
       });
-
-      // ★ когда роутер построит путь — аккуратно подогнать карту по его границам
-      if (fullRoute?.model) {
-        const fitToRoute = () => {
-          try {
-            const b = fullRoute.getBounds();
-            if (b) {
-              this.map.setBounds(b, {
-                checkZoomRange: true,
-                duration: 300,
-                zoomMargin: 40,
-              });
-            }
-          } catch (e) {}
-        };
-        fullRoute.model.events.once("requestsuccess", fitToRoute);
-        fullRoute.model.events.once("requestfail", () => {
-          // если не получилось проложить по дорогам — оставим уже отрисованные точки/резервную линию
-        });
-        // на всякий случай — повторная попытка подогнать
-        setTimeout(fitToRoute, 800);
-      }
     },
   },
 };
@@ -321,6 +237,6 @@ export default {
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.35);
 }
 .label {
-  color: #cbd5e1;
+  color: #0f172a !important;
 }
 </style>

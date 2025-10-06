@@ -71,3 +71,47 @@ select:-webkit-autofill {
   -webkit-text-fill-color: var(--input-fg);
   transition: background-color 5000s ease-in-out 0s;
 }
+
+
+/* ===== Light theme overrides (append to the end) ===== */
+
+/* Светлая палитра через те же переменные */
+:root {
+  --input-bg: #ffffff;
+  --input-fg: #0f172a;
+  --input-border: #d1d5db;
+  --placeholder: #94a3b8;
+
+  --accent: #22c55e;                  /* оставляем твой зелёный */
+  --ring: rgba(34, 197, 94, 0.25);    /* мягче на светлом */
+}
+
+/* Фон и текст сайта */
+body {
+  background: #f7f7f8 !important;     /* перекрываем твой black */
+  color: #0f172a !important;
+}
+
+/* Светлые поверхности и границы (перекрывают локальные тёмные) */
+.panel, .card, .legend, .success-card, .table {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e5e7eb !important;
+}
+.table th, .table td {
+  border-bottom: 1px solid #e5e7eb !important;
+  color: #0f172a !important;
+}
+
+/* Пины в легенде карты на светлой теме */
+.dot {
+  background: #e5e7eb !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 0 0 3px rgba(203,213,225,.45) !important;
+}
+.dot.passed {
+  background: #22c55e !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 3px var(--ring) !important;
+}
