@@ -1,0 +1,73 @@
+* {
+  font-family: "Roboto Slab", serif;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+}
+
+body {
+  box-sizing: content-box;
+  margin: 0;
+  background: black;
+}
+
+/* Глобальные переменные темы */
+:root {
+  --accent: #22c55e;                 /* зелёный как у кнопки поиска VIN */
+  --ring: rgba(34, 197, 94, 0.45);   /* мягкое зелёное свечение */
+  --input-bg: #1a1a1a;
+  --input-fg: #eeeeee;
+  --input-border: #333333;
+  --placeholder: #9ca3af;
+}
+
+/* Не даём Safari увеличивать шрифт/масштаб при фокусе */
+html { -webkit-text-size-adjust: 100%; }
+
+/* Минимум 16px на всех инпутах/селектах/текстовых полях и кнопках */
+input, select, textarea, button {
+  font-size: 16px;
+}
+
+/* Базовый вид полей */
+input, select, textarea {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--input-bg);
+  color: var(--input-fg);
+  border: 1px solid var(--input-border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+/* Ховер (не обязательно, но приятно) */
+input:hover, select:hover, textarea:hover {
+  border-color: #444;
+}
+
+/* Фокус — зелёное свечение как у кнопки VIN */
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent) !important;
+  box-shadow:
+    0 0 0 1px var(--ring),          /* внешний мягкий ореол */
+    0 0 0 1px var(--accent) inset;  /* аккуратный внутренний контур */
+}
+
+/* Плейсхолдер */
+::placeholder { color: var(--placeholder); opacity: 1; }
+
+/* Убираем синий подсвет на iOS при тапе */
+* { -webkit-tap-highlight-color: transparent; }
+
+/* Цвет курсора */
+input, textarea { caret-color: var(--accent); }
+
+/* Причесываем autofill в WebKit (убираем жёлтую заливку) */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  box-shadow: 0 0 0 1000px var(--input-bg) inset;
+  -webkit-text-fill-color: var(--input-fg);
+  transition: background-color 5000s ease-in-out 0s;
+}
