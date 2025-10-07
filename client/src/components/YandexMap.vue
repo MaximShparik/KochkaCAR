@@ -170,7 +170,7 @@ export default {
 <style scoped>
 .map-wrap {
   display: grid;
-  gap: 10px;
+  gap: 16px;
 }
 .ymap {
   width: 100%;
@@ -231,5 +231,21 @@ export default {
 }
 .label {
   color: #0f172a !important;
+}
+
+@media (max-width: 500px) {
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .step {
+    display: flex;
+    justify-content: space-between;
+  }
+  .label {
+    line-height: 27px;
+  }
 }
 </style>

@@ -8,8 +8,8 @@ export const LOCATIONS = [
   },
   {
     key: 'horgos_xinjiang',
-    short: 'Horgos',
-    full: 'Horgos, Xingjiang',
+    short: 'Khorgos',
+    full: 'Khorgos, Xingjiang',
     coord: [44.169836, 80.435227],
   },
   {

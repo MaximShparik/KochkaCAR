@@ -277,7 +277,7 @@ button.ghost:hover {
   gap: 8px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
   .wrap {
     padding: 0 10px;
   }

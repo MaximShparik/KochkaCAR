@@ -101,7 +101,7 @@ button {
   gap: 16px;
 }
 .map {
-  margin-top: 6px;
+  /* margin-top: 6px; */
 }
 body {
   background: #0b0b0b;
